@@ -30,7 +30,11 @@ while True:
             last_line = None
 
             lyrics = fetch_lyrics(song)
-            synced_lyrics = lyrics["syncedLyrics"]
+            try:
+                synced_lyrics = lyrics["syncedLyrics"]
+            except KeyError:
+                console.print("\n[bold cyan]cmus closed")
+                sys.exit()
 
             if synced_lyrics:
                 for line in synced_lyrics.splitlines():
