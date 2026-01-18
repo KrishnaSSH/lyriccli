@@ -3,6 +3,8 @@ CLI for fetching lyrics for various providers
 
 currently works for [cmus player](https://cmus.github.io/)
 
+![Screenshot](assets/screenshot.png)
+
 ## How to run
 
 
