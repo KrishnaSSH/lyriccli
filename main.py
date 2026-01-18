@@ -32,6 +32,7 @@ while True:
                 lyrics = fetch_lyrics(song)
             try:
                 synced_lyrics = lyrics["syncedLyrics"]
+                plain_lyrics = lyrics["plainLyrics"]
             except KeyError:
                 console.print("\n[bold cyan]cmus closed")
                 sys.exit()
@@ -56,9 +57,15 @@ while True:
                 f"[bold green]Duration:[/bold green] {str(timedelta(seconds=song.song_duration))}"
             )
             if not synced_lyrics:
-                console.print(
-                    "[bold blue]You would have to guess lyrics yourself for this one :face_with_head-bandage:[/bold blue]"
-                )
+                if plain_lyrics:
+                    console.print(f"[bold]{plain_lyrics}[/bold]")
+                    console.print(
+                        "[bold blue]Synced lyrics aren't available for this one :face_with_head-bandage:[/bold blue]"
+                    )
+                else:
+                    console.print(
+                        "[bold blue]You would have to guess lyrics yourself for this one :face_with_head-bandage:[/bold blue]"
+                    )
         last_song_id = song_id
         position = cmus_current_position()
         current_line = ""
