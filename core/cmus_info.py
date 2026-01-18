@@ -55,3 +55,24 @@ def cmus_current_song() -> Song | None:
         console.print(
             "[red bold]Alert! [white bold]cmus isn't installed in your system install it from [blue underline]https://cmus.github.io/#download"
         )
+
+
+def cmus_current_position() -> int | None:
+    cmus_command = ["cmus-remote", "-Q"]
+    try:
+        output = subprocess.run(cmus_command, capture_output=True, text=True)
+        if output.returncode == 0:
+            metadata = output.stdout
+            lines = metadata.splitlines()
+            for line in lines:
+                if line.startswith("position"):
+                    position = int(line[len("position ") :])
+                    return position
+        else:
+            console.print("[red bold]Error", output.stderr)
+            return None
+
+    except FileNotFoundError:
+        console.print(
+            "[red bold]Alert! [white bold]cmus isn't installed in your system install it from [blue underline]https://cmus.github.io/#download"
+        )
