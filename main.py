@@ -1,4 +1,5 @@
 import time
+from datetime import timedelta
 
 from rich.console import Console
 
@@ -42,7 +43,12 @@ while True:
                             pass
             last_song_id = song_id
             last_line = None
-            console.print(f"[bold green]Now playing:[/] {song_id}")
+            console.print(
+                f"[bold green]Now playing: [/bold green]{song.title} by {song.artist}\n"
+                f"[bold green]Album:[/bold green] {song.album_name}\n"
+                f"[bold green]Genre:[/bold green] {song.genre}\n"
+                f"[bold green]Duration:[/bold green] {str(timedelta(seconds=song.song_duration))}"
+            )
 
         position = cmus_current_position()
         current_line = ""
