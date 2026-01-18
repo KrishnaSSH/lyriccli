@@ -64,7 +64,7 @@ while True:
                 f"[bold yellow]{format_timestamp(position)} [bold white]{current_line}"
             )
             last_line = current_line
-        time.sleep(1)
+        time.sleep(0.5)
     except KeyboardInterrupt:
         console.print("\n[bold yellow] :wave: bye")
         exit()
