@@ -26,10 +26,10 @@ while True:
         # song change
         if song_id != last_song_id:
             console.clear()
-            lyrics_tuples = []
+            lyrics_tuples.clear()
             last_line = None
-
-            lyrics = fetch_lyrics(song)
+            with console.status("[bold yellow]Scraping") as status:
+                lyrics = fetch_lyrics(song)
             try:
                 synced_lyrics = lyrics["syncedLyrics"]
             except KeyError:
