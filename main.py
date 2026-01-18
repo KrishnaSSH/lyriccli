@@ -1,3 +1,4 @@
+import sys
 import time
 from datetime import timedelta
 
@@ -21,9 +22,12 @@ while True:
             console.print("[bold red]No song currently playing!")
             exit()
         song_id = (song.artist, song.title)
+
+        # song change
         if song_id != last_song_id:
             console.clear()
             lyrics_tuples = []
+            last_line = None
 
             lyrics = fetch_lyrics(song)
             synced_lyrics = lyrics["syncedLyrics"]
@@ -41,15 +45,17 @@ while True:
                             lyrics_tuples.append((total_seconds, lyric))
                         except ValueError:
                             pass
-            last_song_id = song_id
-            last_line = None
             console.print(
                 f"[bold green]Now playing: [/bold green]{song.title} by {song.artist}\n"
                 f"[bold green]Album:[/bold green] {song.album_name}\n"
                 f"[bold green]Genre:[/bold green] {song.genre}\n"
                 f"[bold green]Duration:[/bold green] {str(timedelta(seconds=song.song_duration))}"
             )
-
+            if not synced_lyrics:
+                console.print(
+                    "[bold blue]You would have to guess lyrics yourself for this one :face_with_head-bandage:[/bold blue]"
+                )
+        last_song_id = song_id
         position = cmus_current_position()
         current_line = ""
         for t, lyric in lyrics_tuples:
@@ -59,7 +65,6 @@ while True:
                 break
 
         if current_line != last_line:
-            ts_formatted = format_timestamp(position)
             console.print(
                 f"[bold yellow]{format_timestamp(position)} [bold white]{current_line}"
             )
@@ -67,4 +72,4 @@ while True:
         time.sleep(0.5)
     except KeyboardInterrupt:
         console.print("\n[bold yellow] :wave: bye")
-        exit()
+        sys.exit()
