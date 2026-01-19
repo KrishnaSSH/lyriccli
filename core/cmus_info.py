@@ -25,22 +25,23 @@ def cmus_query() -> str | None:
 
 
 def parse_cmus(lines: list[str]) -> dict:
+    prefixes = {
+        "file ": ("file_name", str),
+        "tag title ": ("title", str),
+        "duration ": ("song_duration", int),
+        "tag artist ": ("artist", str),
+        "tag albumartist ": ("album_artist", str),
+        "tag album ": ("album_name", str),
+        "tag genre ": ("genre", str),
+    }
+
     song_data = {}
+
     for line in lines:
-        if line.startswith("file "):
-            song_data["file_name"] = line[len("file ") :]
-        elif line.startswith("tag title "):
-            song_data["title"] = line[len("tag title ") :]
-        elif line.startswith("duration "):
-            song_data["song_duration"] = int(line[len("duration ") :])
-        elif line.startswith("tag artist "):
-            song_data["artist"] = line[len("tag artist ") :]
-        elif line.startswith("tag albumartist "):
-            song_data["album_artist"] = line[len("tag albumartist ") :]
-        elif line.startswith("tag album "):
-            song_data["album_name"] = line[len("tag album ") :]
-        elif line.startswith("tag genre "):
-            song_data["genre"] = line[len("tag genre ") :]
+        for prefix, (key, cast) in prefixes.items():
+            if line.startswith(prefix):
+                song_data[key] = cast(line[len(prefix) :])
+                break
 
     return song_data
 
