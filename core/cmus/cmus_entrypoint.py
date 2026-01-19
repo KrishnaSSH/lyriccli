@@ -112,6 +112,3 @@ def cmus_entrypoint():
         except KeyboardInterrupt:
             console.print("\n[bold yellow] :wave: bye")
             sys.exit(0)
-
-
-cmus_entrypoint()
