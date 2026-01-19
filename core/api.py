@@ -22,4 +22,4 @@ def fetch_lyrics(song: Song) -> dict:
             "syncedLyrics": lyrics_data.get("syncedLyrics"),
         }
     except requests.RequestException as err:
-        return {"plain": f"Error: {err}", "synced": f"Error: {err}"}
+        return {"plainLyrics": f"Error: {err}", "syncedLyrics": f"Error: {err}"}

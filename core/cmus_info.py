@@ -56,5 +56,5 @@ def cmus_current_position(metadata: str | None) -> int | None:
         return None
     for line in metadata.splitlines():
         if line.startswith("position"):
-            position = int(line[len("position ") :])
+            position = int(line.removeprefix("position "))
             return position
