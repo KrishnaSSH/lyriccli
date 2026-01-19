@@ -36,7 +36,7 @@ def main():
                 console.clear()
                 lyrics_tuples.clear()
                 last_line = None
-                with console.status("[bold yellow]Scraping") as status:
+                with console.status("[bold yellow]Scraping"):
                     lyrics = fetch_lyrics(song)
                 try:
                     synced_lyrics = lyrics["syncedLyrics"]

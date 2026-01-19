@@ -31,7 +31,7 @@ def parse_cmus(lines: list[str]) -> dict:
     for line in lines:
         for prefix, (key, cast) in prefixes.items():
             if line.startswith(prefix):
-                song_data[key] = cast(line[len(prefix) :])
+                song_data[key] = cast(line.removeprefix(prefix))
                 break
     return song_data
 
