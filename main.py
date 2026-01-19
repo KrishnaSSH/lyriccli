@@ -5,7 +5,7 @@ from datetime import timedelta
 from rich.console import Console
 
 from core.api import fetch_lyrics
-from core.cmus_info import cmus_current_position, cmus_current_song
+from core.cmus_info import cmus_current_position, cmus_current_song, cmus_query
 from core.formatter import format_timestamp
 
 console = Console(color_system="truecolor")
@@ -17,7 +17,7 @@ lyrics_tuples = []
 
 while True:
     try:
-        song = cmus_current_song()
+        song = cmus_current_song(cmus_query())
         if not song:
             console.print("[bold red]No song currently playing!")
             exit()
@@ -67,7 +67,7 @@ while True:
                         "[bold blue]You would have to guess lyrics yourself for this one :face_with_head-bandage:[/bold blue]"
                     )
         last_song_id = song_id
-        position = cmus_current_position()
+        position = cmus_current_position(cmus_query())
         current_line = ""
         for t, lyric in lyrics_tuples:
             if position >= t:
