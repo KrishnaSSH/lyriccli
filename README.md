@@ -7,28 +7,20 @@ currently works for [cmus player](https://cmus.github.io/)
 
 ## How to run
 
+install uv
+
+https://astral.sh/uv
 
 clone the git repository
 ```
 git clone https://github.com/KrishnaSSH/lyriccli
 ```
-
-make a virutal environment
+install dependencies
 ```
-python -m venv venv
-```
-
-activate the virtual environment
-```
-source venv/bin/activate
+uv sync
 ```
 
-install the dependencies
+run the file
 ```
-pip install -r requirements.txt
-```
-
-run
-```
-python main.py
+uv run python main.py
 ```
