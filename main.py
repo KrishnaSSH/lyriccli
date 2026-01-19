@@ -14,21 +14,20 @@ console = Console(color_system="truecolor")
 last_line = None
 last_song_id = None
 lyrics_tuples = []
-
-try:
-    cmus_result = cmus_query()
-except FileNotFoundError:
-    console.print(
-        "[red bold]Alert! [white bold]cmus isn't installed in your system install it from [blue underline]https://cmus.github.io/#download"
-    )
-    sys.exit(1)
-
 while True:
+    try:
+        cmus_result = cmus_query()
+    except FileNotFoundError:
+        console.print(
+            "[red bold]Alert! [white bold]cmus isn't installed in your system install it from [blue underline]https://cmus.github.io/#download"
+        )
+        sys.exit(1)
+
     try:
         song = cmus_current_song(cmus_result)
         if not song:
             console.print("[bold red]No song currently playing!")
-            exit()
+            sys.exit(0)
         song_id = (song.artist, song.title)
 
         # song change
