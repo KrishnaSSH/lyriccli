@@ -64,12 +64,26 @@ def main():
                                 lyrics_tuples.append((total_seconds, lyric))
                             except ValueError:
                                 pass
-                console.print(
-                    f"[bold green]Now playing: [/bold green]{song.title} by {song.artist}\n"
-                    f"[bold green]Album:[/bold green] {song.album_name}\n"
-                    f"[bold green]Genre:[/bold green] {song.genre}\n"
-                    f"[bold green]Duration:[/bold green] {str(timedelta(seconds=song.song_duration))}"
-                )
+                if song.song_duration != None:
+                    duration = str(timedelta(seconds=song.song_duration))
+                    console.print(
+                        f"[bold green]Now playing: [/bold green]{song.title} by {song.artist}\n"
+                        f"[bold green]Album:[/bold green] {song.album_name}\n"
+                        f"[bold green]Genre:[/bold green] {song.genre}\n"
+                        f"[bold green]Duration:[/bold green] {duration}"
+                    )
+                else:
+                    console.print(
+                        "\n[bold cyan]cmus is not playing anything right now[/bold cyan]"
+                    )
+                    console.print("[dim]Press [bold]r[/bold] and Enter to retry[/dim]")
+
+                    while True:
+                        user_input = input("> ").strip().lower()
+                        if user_input == "r":
+                            break
+                    continue
+
                 if not synced_lyrics:
                     if plain_lyrics:
                         console.print(f"[bold]{plain_lyrics}[/bold]")

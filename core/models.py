@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Song:
-    file_name: str
-    title: str
-    album_name: str
-    artist: str
-    album_artist: str
-    genre: str
-    song_duration: int
+    file_name: str | None
+    title: str | None
+    album_name: str | None
+    artist: str | None
+    album_artist: str | None
+    genre: str | None
+    song_duration: int | None
