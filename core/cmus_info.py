@@ -9,19 +9,12 @@ console = Console(color_system="truecolor")
 
 def cmus_query() -> str | None:
     cmus_command = ["cmus-remote", "-Q"]
-    try:
-        output = subprocess.run(cmus_command, capture_output=True, text=True)
-        if output.returncode == 0:
-            metadata = output.stdout
-            return metadata
-        else:
-            console.print("[red bold]Error", output.stderr)
-            return None
-
-    except FileNotFoundError:
-        console.print(
-            "[red bold]Alert! [white bold]cmus isn't installed in your system install it from [blue underline]https://cmus.github.io/#download"
-        )
+    output = subprocess.run(cmus_command, capture_output=True, text=True)
+    if output.returncode == 0:
+        metadata = output.stdout
+        return metadata
+    else:
+        return None
 
 
 def parse_cmus(lines: list[str]) -> dict:
@@ -34,23 +27,19 @@ def parse_cmus(lines: list[str]) -> dict:
         "tag album ": ("album_name", str),
         "tag genre ": ("genre", str),
     }
-
     song_data = {}
-
     for line in lines:
         for prefix, (key, cast) in prefixes.items():
             if line.startswith(prefix):
                 song_data[key] = cast(line[len(prefix) :])
                 break
-
     return song_data
 
 
 def cmus_current_song(metadata: str | None) -> Song | None:
     if not metadata:
         return None
-    lines = metadata.splitlines()
-    song_data = parse_cmus(lines)
+    song_data = parse_cmus(metadata.splitlines())
     return Song(
         file_name=song_data.get("file_name"),
         title=song_data.get("title"),
@@ -65,8 +54,7 @@ def cmus_current_song(metadata: str | None) -> Song | None:
 def cmus_current_position(metadata: str | None) -> int | None:
     if not metadata:
         return None
-    lines = metadata.splitlines()
-    for line in lines:
+    for line in metadata.splitlines():
         if line.startswith("position"):
             position = int(line[len("position ") :])
             return position

@@ -15,9 +15,17 @@ last_line = None
 last_song_id = None
 lyrics_tuples = []
 
+try:
+    cmus_result = cmus_query()
+except FileNotFoundError:
+    console.print(
+        "[red bold]Alert! [white bold]cmus isn't installed in your system install it from [blue underline]https://cmus.github.io/#download"
+    )
+    sys.exit(1)
+
 while True:
     try:
-        song = cmus_current_song(cmus_query())
+        song = cmus_current_song(cmus_result)
         if not song:
             console.print("[bold red]No song currently playing!")
             exit()
@@ -35,7 +43,7 @@ while True:
                 plain_lyrics = lyrics["plainLyrics"]
             except KeyError:
                 console.print("\n[bold cyan]cmus closed")
-                sys.exit()
+                sys.exit(1)
 
             if synced_lyrics:
                 for line in synced_lyrics.splitlines():
@@ -67,7 +75,7 @@ while True:
                         "[bold blue]You would have to guess lyrics yourself for this one :face_with_head-bandage:[/bold blue]"
                     )
         last_song_id = song_id
-        position = cmus_current_position(cmus_query())
+        position = cmus_current_position(cmus_result)
         current_line = ""
         for t, lyric in lyrics_tuples:
             if position >= t:
@@ -83,4 +91,4 @@ while True:
         time.sleep(0.2)
     except KeyboardInterrupt:
         console.print("\n[bold yellow] :wave: bye")
-        sys.exit()
+        sys.exit(0)
