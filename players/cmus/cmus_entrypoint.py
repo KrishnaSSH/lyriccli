@@ -36,6 +36,27 @@ def cmus_entrypoint():
                 console.clear()
                 lyrics_tuples.clear()
                 last_line = None
+
+                if song.song_duration is not None:
+                    duration = str(timedelta(seconds=song.song_duration))
+                    console.print(
+                        f"[bold green]Now playing: [/bold green]{song.title} by {song.artist}\n"
+                        f"[bold green]Album:[/bold green] {song.album_name}\n"
+                        f"[bold green]Genre:[/bold green] {song.genre}\n"
+                        f"[bold green]Duration:[/bold green] {duration}"
+                    )
+                else:
+                    console.print(
+                        "\n[bold cyan]cmus is not playing anything right now[/bold cyan]"
+                    )
+                    console.print("[dim]Press [bold]r[/bold] and Enter to retry[/dim]")
+
+                    while True:
+                        user_input = input("> ").strip().lower()
+                        if user_input == "r":
+                            break
+                    continue
+
                 with console.status("[bold yellow]Scraping"):
                     lyrics = fetch_lyrics(song)
                 try:
@@ -64,25 +85,6 @@ def cmus_entrypoint():
                                 lyrics_tuples.append((total_seconds, lyric))
                             except ValueError:
                                 pass
-                if song.song_duration is not None:
-                    duration = str(timedelta(seconds=song.song_duration))
-                    console.print(
-                        f"[bold green]Now playing: [/bold green]{song.title} by {song.artist}\n"
-                        f"[bold green]Album:[/bold green] {song.album_name}\n"
-                        f"[bold green]Genre:[/bold green] {song.genre}\n"
-                        f"[bold green]Duration:[/bold green] {duration}"
-                    )
-                else:
-                    console.print(
-                        "\n[bold cyan]cmus is not playing anything right now[/bold cyan]"
-                    )
-                    console.print("[dim]Press [bold]r[/bold] and Enter to retry[/dim]")
-
-                    while True:
-                        user_input = input("> ").strip().lower()
-                        if user_input == "r":
-                            break
-                    continue
 
                 if not synced_lyrics:
                     if plain_lyrics:
