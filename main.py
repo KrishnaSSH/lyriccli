@@ -1,3 +1,3 @@
-from core.cmus.cmus_entrypoint import cmus_entrypoint
+from players.cmus.cmus_entrypoint import cmus_entrypoint
 
 cmus_entrypoint()

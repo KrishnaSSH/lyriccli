@@ -5,8 +5,8 @@ from datetime import timedelta
 from rich.console import Console
 
 from core.api import fetch_lyrics
-from core.cmus.cmus_info import cmus_current_position, cmus_current_song, cmus_query
-from core.cmus.formatter import format_timestamp
+from players.cmus.cmus_info import cmus_current_position, cmus_current_song, cmus_query
+from players.cmus.formatter import format_timestamp
 
 console = Console(color_system="truecolor")
 
