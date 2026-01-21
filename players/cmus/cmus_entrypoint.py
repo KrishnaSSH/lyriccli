@@ -30,7 +30,7 @@ def cmus_entrypoint():
             sys.exit(1)
 
         try:
-            if not cmus_metadata_check(cmus_query()):
+            if not cmus_metadata_check(cmus_result):
                 closed_cmus_handler()
                 continue
 
@@ -56,7 +56,7 @@ def cmus_entrypoint():
                     )
                 else:
                     console.print(
-                        "\n[bold cyancmus is not playing anything right now[/bold cyan]"
+                        "\n[bold cyan]cmus is not playing anything right now[/bold cyan]"
                     )
                     console.print("[dim]Press [bold]r[/bold] and Enter to retry[/dim]")
 
@@ -120,10 +120,12 @@ def cmus_entrypoint():
 
 
 def closed_cmus_handler():
-    console.print("\n[bold cyan]cmus closed[/bold cyan]")
+    console.print("\n[bold cyan]cmus closed[/cyan bold]")
     console.print("[dim]Press [bold]r[/bold] and Enter to retry[/dim]")
 
     while True:
         user_input = input("> ").strip().lower()
         if user_input == "r":
+            console.clear()
+            cmus_entrypoint()
             return
