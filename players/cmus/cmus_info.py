@@ -17,6 +17,15 @@ def cmus_query() -> str | None:
         return None
 
 
+def cmus_metadata_check(metadata) -> bool:
+    if not metadata:
+        return False
+    elif metadata.startswith("cmus-remote:"):
+        return False
+    else:
+        return True
+
+
 def parse_cmus(lines: list[str]) -> dict:
     prefixes = {
         "file ": ("file_name", str),

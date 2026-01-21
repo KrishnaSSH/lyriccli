@@ -1,5 +1,5 @@
 # lyriccli
-CLI for fetching lyrics for various providers
+CLI for fetching lyrics for various players
 
 currently works for [cmus player](https://cmus.github.io/)
 
