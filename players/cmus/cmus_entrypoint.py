@@ -33,16 +33,16 @@ entrypoint
 
 
 def cmus_entrypoint():
-    last_line = None
     last_song_id = None
-    lyrics_tuples = []
+    last_line = None
+    lyrics_tuples: list[tuple[float, str]] = []
+
     while True:
         try:
-            if cmus_query():
-                global metadata
-                metadata = cmus_query()
-            else:
+            metadata = cmus_query()
+            if not metadata:
                 closed_cmus_handler()
+                continue
         except FileNotFoundError:
             not_installed_cmus_handler()
             sys.exit(1)
@@ -50,53 +50,52 @@ def cmus_entrypoint():
         try:
             song = cmus_current_song(metadata)
             position = cmus_current_position(metadata)
-            if not song:
-                time.sleep(2)
+
+            if not song or not song.title:
+                not_playing_cmus_handler()
                 continue
+
             song_id = (song.artist, song.title)
 
-            song_track(
-                song_id=song_id,
-                last_song_id=last_song_id,
-                lyrics_tuples=lyrics_tuples,
-                last_line=last_line,
-            )
+            if song_id != last_song_id:
+                ui_console.clear()
+                lyrics_tuples.clear()
+                last_line = None
+                last_song_id = song_id
 
-            if song.song_duration:
-                duration = str(timedelta(seconds=song.song_duration))
-                ui_now_playing_render(
-                    song.title,
-                    song.artist,
-                    song.album_artist,
-                    song.genre,
-                    duration,
-                )
-            else:
-                not_playing_cmus_handler()
-                ui_retry_handler()
-                continue
-
-            with ui_console.status("[bold yellow]Scraping"):
-                lyrics = fetch_lyrics(song)
-                synced_lyrics = lyrics["syncedLyrics"]
-                plain_lyrics = lyrics["plainLyrics"]
-
-            if synced_lyrics:
-                try:
-                    lyrics_tuples = parse_synced_lyrics(
-                        synced_lyrics=synced_lyrics, lyrics_tuples=lyrics_tuples
+                if song.song_duration:
+                    duration = str(timedelta(seconds=song.song_duration))
+                    ui_now_playing_render(
+                        song.title,
+                        song.artist,
+                        song.album_artist,
+                        song.genre,
+                        duration,
                     )
-                except ValueError:
-                    pass
+                else:
+                    not_playing_cmus_handler()
+                    continue
 
-            if not synced_lyrics:
-                if plain_lyrics:
-                    ui_plain_lyrics_render(plain_lyrics)
+                with ui_console.status("[bold yellow]Scraping"):
+                    lyrics = fetch_lyrics(song)
+
+                synced = lyrics.get("syncedLyrics")
+                plain = lyrics.get("plainLyrics")
+
+                if synced:
+                    lyrics_tuples = parse_synced_lyrics(
+                        synced_lyrics=synced,
+                        lyrics_tuples=[],
+                    )
+                elif plain:
+                    ui_plain_lyrics_render(plain)
                 else:
                     ui_no_lyrics_render()
 
-            last_song_id = song_id
-            position = cmus_current_position(cmus_query())
+            if position is None:
+                time.sleep(0.3)
+                continue
+
             current_line = ""
             for t, lyric in lyrics_tuples:
                 if position >= t:
@@ -104,18 +103,15 @@ def cmus_entrypoint():
                 else:
                     break
 
-            if current_line != last_line:
+            if current_line and current_line != last_line:
                 ui_console.print(
-                    f"[bold yellow]{format_timestamp(position)} [bold white]{current_line}"
+                    f"[bold yellow]{format_timestamp(position)} "
+                    f"[bold white]{current_line}"
                 )
+                last_line = current_line
+
+            time.sleep(0.2)
+
         except KeyboardInterrupt:
             ui_bye_handler()
             sys.exit(0)
-
-
-def song_track(song_id, last_song_id, lyrics_tuples, last_line):
-    if song_id != last_song_id:
-        ui_console.clear()
-        lyrics_tuples.clear()
-        last_line = None
-    return last_line
