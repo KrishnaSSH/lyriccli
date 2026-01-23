@@ -7,7 +7,7 @@ from core.ui import (
     ui_now_playing_render,
     ui_plain_lyrics_render,
     ui_retry_handler,
-    # migrate later to  ui_scraping_render,
+    ui_scraping_render,
 )
 from core.api import fetch_lyrics
 from datetime import timedelta
@@ -42,6 +42,7 @@ def cmus_entrypoint():
             metadata = cmus_query()
             if not metadata:
                 closed_cmus_handler()
+                ui_retry_handler()
                 continue
         except FileNotFoundError:
             not_installed_cmus_handler()
@@ -76,7 +77,7 @@ def cmus_entrypoint():
                     not_playing_cmus_handler()
                     continue
 
-                with ui_console.status("[bold yellow]Scraping"):
+                with ui_scraping_render():
                     lyrics = fetch_lyrics(song)
 
                 synced = lyrics.get("syncedLyrics")

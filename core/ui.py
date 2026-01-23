@@ -1,5 +1,6 @@
 from rich.console import Console
 from rich.prompt import Prompt
+from contextlib import contextmanager
 
 ui_console = Console(color_system="truecolor")
 
@@ -33,8 +34,10 @@ def ui_now_playing_render(
     )
 
 
+@contextmanager
 def ui_scraping_render() -> None:
-    ui_console.status("[bold yellow]Scraping[/]")
+    with ui_console.status("[bold yellow]Scraping"):
+        yield
 
 
 def ui_plain_lyrics_render(plain_lyrics):
