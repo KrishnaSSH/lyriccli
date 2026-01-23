@@ -1,35 +1,59 @@
+"""
+SEMENTICS
+1. Clear documentation is required for each function
+2. Use multiline comments
+"""
+
 import subprocess
-
 from rich.console import Console
-
 from core.models import Song
 
 console = Console(color_system="truecolor")
 
 
+"""
+function:
+a function that returns the output of `cmus-remote -Q` command
+"""
+
+
 def cmus_query() -> str | None:
     cmus_command = ["cmus-remote", "-Q"]
     output = subprocess.run(cmus_command, capture_output=True, text=True)
-    if output.returncode == 0:
-        metadata = output.stdout
+    metadata = output.stdout
+    if output.returncode == 0 and metadata:
         return metadata
+    elif output.returncode == 1 or metadata.startswith("cmus-remote"):
+        return None
     else:
         return None
 
 
-def cmus_metadata_check(metadata) -> bool:
-    if not metadata:
-        return False
-    elif metadata.startswith("cmus-remote:"):
-        return False
-    else:
-        return True
+# """
+# function:
+# a function that checks if the metadata is real or not
+# """
+#
+#
+# def cmus_metadata_check(metadata) -> bool:
+#    if not metadata:
+#        return False
+#    elif metadata.startswith("cmus-remote:"):
+#        return False
+#    else:
+#        return True
+
+
+"""
+function:
+a function that parses the cmus result
+"""
 
 
 def parse_cmus(lines: list[str]) -> dict:
     prefixes = {
-        "file ": ("file_name", str),
         "tag title ": ("title", str),
+        "file ": ("file_name", str),
         "duration ": ("song_duration", int),
         "tag artist ": ("artist", str),
         "tag albumartist ": ("album_artist", str),

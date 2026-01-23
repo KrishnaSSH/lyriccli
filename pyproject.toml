@@ -17,9 +17,3 @@ dependencies = [
 ]
 
 
-[tool.basedpyright]
-typeCheckingMode = "basic"
-reportMissingTypeStubs = false
-reportUnknownMemberType = false
-reportUnknownVariableType = false
-reportGeneralTypeIssues = false
