@@ -69,6 +69,12 @@ def parse_cmus(lines: list[str]) -> dict:
     return song_data
 
 
+"""
+function:
+a function that takes in the metadata and makes it an object of the Song class
+"""
+
+
 def cmus_current_song(metadata: str | None) -> Song | None:
     if not metadata:
         return None
@@ -82,6 +88,12 @@ def cmus_current_song(metadata: str | None) -> Song | None:
         genre=song_data.get("genre"),
         song_duration=song_data.get("song_duration"),
     )
+
+
+"""
+function:
+a function that takes in the metadata and returns the current position as an integer
+"""
 
 
 def cmus_current_position(metadata: str | None) -> int | None:
